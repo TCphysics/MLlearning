@@ -1,0 +1,80 @@
+'''
+贝叶斯算法(以是被侮辱性评论为例)
+
+A. 任务
+给定一个句子 Sentence {word_i}
+判定Sentence是否偏向Abusive or Netural?
+P(Abusive|Sentence) vs P(Netural|Sentence)
+
+B. 贝叶斯算法
+P(Abusive|Sentence) = P(Sentence|Abusive) * P(Abusive) / P(Sentence)
+P(Netural|Sentence) = P(Sentence|Netural) * P(Netural) / P(Sentence)
+
+忽略相同分母P(Sentence)， P(Sentence|Abusive) = P(word_1|Abu) * P(word_2|Abu) * ...
+
+C. 准备过程
+P(Abusive) 和 P(Netural) 取决于历史句库；
+历史库由historyData载入，将句库所有的单词制做成词库，并将句子分类为abusive 和 netural 两种
+计算词库中所有单词来源于A类或N类句子的概率，制做成概率向量 P(words|Abusive)
+
+以其中一个类别为例, 对于任意属于词库{words}的一个单词{w}
+P(w|Abusive) 是单一单词来源于 Abusive 句子的概率，其计算方法是
+P(w|Abusive) = Count(w in A)/Size(A)
+Size(A) ：统计历史句库中所有 Abusive 句子的单词个数之和（不删除重复单词）
+Count(w in A) ：统计 word_i 在 所有 Abusive 句子中的出现次数
+
+D. 贝叶斯分类
+log(P(Sentence|Abusive)) = Set(word_i) * log(P(words|Abusive))
+词库{words}中未出现于 Sentence 的 Set 是零，相当于不被选取
+如果 Sentence中有词库外的新词，只能舍去不予考虑
+
+E. 优化
+1.解决有些单词只在 Netural 句中出现而不是 Abusive 句中出现的方法是把所有单词的初始次数都设定为1
+这样就不会出现零概率情况
+2.将 Count(A)的初始值设定为 2（no idea）
+3.概率连乘会出现非常小的数字乃至超出 Python的精读。解决办法就是用 log 代替连乘。
+
+F. 延伸
+贝叶斯算法可以用于识别一个文章的作者。由于每个作者的行文风格导致单词出现频率不同或者出现个性单词
+，我们可以将所有备选作者的历史文章做成词库，并将待识别文章输入。该场景通常需要大量数据，有些优化
+算法可以忽略。
+
+另外一个重要运用是垃圾邮件过滤
+
+G. 思考
+当词库选取相等数量的 Abusive 和 Netural （每个作家的历史文章数相同）时。P(Abusive)=P(Netural)
+贝叶斯算法本质上是在比较测试 Sentence 中每个单词来自不同类别句子的可能性，然后将可能性叠加比较
+
+是否可以将不同单词做加权处理？比如某个单词比如（“FUCK”）的出现可以很大程度上确定测试句子的类型
+此时选取适当句库（或者当句库非常大的时候，Size(A)>>1）,P("FUCK"|Abu)会相对较高，此时是否可以将
+ P("FUCK"|Abu)适当加权（比如引入指数函数）？
+
+P(Abusive)和P(Netural)的选择是佛会影响到算法准确度?是P(Abusive)=P(Netural)更好，还是
+随机选取历史数据，让P(Abusive)与P(Netural)取决于大数据统计结果更好？
+
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
