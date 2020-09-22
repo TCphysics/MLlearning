@@ -10,7 +10,7 @@ B. 贝叶斯算法
 P(Abusive|Sentence) = P(Sentence|Abusive) * P(Abusive) / P(Sentence)
 P(Netural|Sentence) = P(Sentence|Netural) * P(Netural) / P(Sentence)
 
-忽略相同分母P(Sentence)， P(Sentence|Abusive) = P(word_1|Abu) * P(word_2|Abu) * ...
+忽略相同分母P(Sentence)， P(Sentence|Abusive) = P(word_1|Abu) * P(word_2|Abu) ...
 
 C. 准备过程
 P(Abusive) 和 P(Netural) 取决于历史句库；
