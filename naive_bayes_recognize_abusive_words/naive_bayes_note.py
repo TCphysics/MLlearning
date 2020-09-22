@@ -126,6 +126,7 @@ def classifyNB(testVector, p0Vec, p1Vec, pAbu):
     :param pAbu: 类别1，侮辱性文件的出现概率
     :return: 类别1 or 0
     """
+    
     # 计算公式  log(P(F1|C))+log(P(F2|C))+....+log(P(Fn|C))+log(P(C))
     # 大家可能会发现，上面的计算公式，没有除以贝叶斯准则的公式的分母，也就是 P(w) （P(w) 指的是此文档在所有的文档中出现的概率）就进行概率大小的比较了，
     # 因为 P(w) 针对的是包含侮辱和非侮辱的全部文档，所以 P(w) 是相同的。
