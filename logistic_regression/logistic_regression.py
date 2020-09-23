@@ -23,58 +23,43 @@ class LogisticRegression(object):
         self.stepSize = stepSize
 
     def buildMatrix(self):
+        catVec = np.array(self.trainingCategory).reshape(len(self.trainingCategory),1)
         trainMat = self.trainingData.copy()
         for i in range(len(trainMat)):
             trainMat[i].append(1)
-        return np.array(trainMat), np.array(self.trainingCategory)
+
+            
+        return np.array(trainMat), catVec
 
     def Sigmoid(self, xMat, thetaVec):
         res = np.zeros(xMat.shape[0])
         for i in range(xMat.shape[0]):
             res[i] = np.dot(xMat[i,:],thetaVec)
-        res = 1/(1+np.exp(res))
+        res = 1/(1+np.exp(-res))
         return res
 
-    def iteration(self, xMat, catVec):
-        thetaVec = np.ones(trainingData)
-        for c in range(cycleMax):
+    def iteration(self, trainingMat, catVec):
+        xMat = trainingMat.copy()
+        thetaVec = np.ones(len(self.trainingData[0]))
+        for c in range(self.cycleMax):
+            print(np.round(100*c/self.cycleMax,2),'%',end='\r')
             E = self.Sigmoid(xMat, thetaVec)
+            E = E.reshape(len(self.trainingCategory),1)
             delta = self.stepSize/xMat.shape[0] * (E-catVec)
-            thetaVec -= delta
+            delta = np.dot(np.transpose(delta),xMat)
+            # print('delta:',delta.shape)
+            thetaVec -= delta.reshape(3)
         return thetaVec
 
     def run(self):
         trainMat, catVec = self.buildMatrix()
-        theta_solu = self.iteration(self, xMat, catVec)
+        theta_solu = self.iteration(trainMat, catVec)
         return theta_solu
 
     def plotResult(self, theta_solu):
         return
 
-if __name__ == "__main__":
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# if __name__ == "__main__":
 
 
 
