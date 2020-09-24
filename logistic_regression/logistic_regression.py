@@ -1,11 +1,5 @@
 import numpy as np
 
-def loadData(self, directory):
-    '''
-    :param directory: directory of data
-    '''
-    return
-
 class LogisticRegression(object):
     '''
     Logistic regression python code.
@@ -32,11 +26,12 @@ class LogisticRegression(object):
         return np.array(trainMat), catVec
 
     def Sigmoid(self, xMat, thetaVec):
-        res = np.zeros(xMat.shape[0])
+        res = np.zeros(xMat.shape[0], dtype=np.float128)
         for i in range(xMat.shape[0]):
             res[i] = np.dot(xMat[i,:],thetaVec)
-        res = 1/(1+np.exp(-res))
-        return res
+
+        res_0 = 1/(1+np.exp(-res))
+        return res_0
 
     def iteration(self, trainingMat, catVec):
         xMat = trainingMat.copy()
@@ -48,7 +43,7 @@ class LogisticRegression(object):
             delta = self.stepSize/xMat.shape[0] * (E-catVec)
             delta = np.dot(np.transpose(delta),xMat)
             # print('delta:',delta.shape)
-            thetaVec -= delta.reshape(3)
+            thetaVec -= delta.reshape(len(xMat[0]))
         return thetaVec
 
     def run(self):

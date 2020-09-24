@@ -48,7 +48,7 @@ def calErrorRate(xList,Category,theta):
 
 N, d = 250, 10
 xList, cat = generating2dData(N, d)
-cycleMax, stepSize = 20000, 0.1
+cycleMax, stepSize = 10000, 0.1
 LRsolution = logistic_regression.LogisticRegression(xList, cat, cycleMax, stepSize)
 theta_solu = LRsolution.run()
 errorRate  = np.round(calErrorRate(xList,cat,theta_solu)*100,2)
