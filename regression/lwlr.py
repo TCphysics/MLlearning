@@ -18,7 +18,7 @@ class localWeightedLinearRegression(object):
     def remodelInput(self):
         for x in self.xInput:
             if isinstance(x, list):
-                self.X.append([1].extend(x))
+                self.X.append([1]+x)
             else:
                 self.X.append([1,x])
 
@@ -34,8 +34,8 @@ class localWeightedLinearRegression(object):
         temp = []
         if isinstance(self.xInput[0], list):
             for x in self.xInput:
-                d = sum([(x[i]-self.xTest[i])**2 for i in range(len(self.xInput[0]))])
-
+                # d = sum([(x[i]-self.xTest[i])**2 for i in range(len(self.xInput[0]))])
+                d = np.sum(np.square(x-np.array(self.xTest)))
                 temp.append(np.exp(-d/(2*self.k)))
         else:
             for x in self.xInput:
@@ -45,6 +45,7 @@ class localWeightedLinearRegression(object):
 
     def LWLRsolution(self):
         self.X = np.mat(self.X)
+        # print(self.X)
         XTVX = self.X.T*(self.V * self.X)
         XTVY = self.X.T * (self.V * self.Y)
         self.W = XTVX.I * XTVY
@@ -74,6 +75,7 @@ if __name__ == '__main__':
         yi = xi * W[1]+W[0]
         y0.append(yi[0])
 
+    quit()
     plt.figure(figsize=(8,5))
     plt.plot(x,y, 'ro',ms=2.5,label='original data')
     plt.plot(x,y0,'b' ,ms=1.5,label='LWLR fitting, k='+str(k))
