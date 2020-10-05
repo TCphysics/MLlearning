@@ -28,12 +28,14 @@ class ApriopriCT(object):
         return
 
     def match(self, items, dataL):
+        # decide if a items combo is contained in a single data
         for i in items:
             if dataL[i] == 0:
                 return False
         return True
 
     def updateC(self, C):
+        # Drop effective combo when its freq lower than minSuport
         c_update = []
         for ci in C:
             count = 0
@@ -47,6 +49,7 @@ class ApriopriCT(object):
         return c_update
 
     def isApriori(self,l,C):
+        # decide if a Ck have sublist outside the Ck-1.
         for i in range(len(l)):
             subList = l[:i]+l[i+1:]
             if subList not in C:
@@ -54,6 +57,7 @@ class ApriopriCT(object):
         return True
 
     def create_Ck(self,C,k):
+        #generate Ck based on Ck-1
         Ck = []
         lenC = len(C)
         for i in range(lenC):
@@ -69,6 +73,7 @@ class ApriopriCT(object):
         return Ck
 
     def findFreqList(self):
+        # find the frequency list
         C = self.C0.copy()
         C = self.updateC(C)
         i = 1
@@ -100,7 +105,6 @@ class ApriopriCT(object):
         freqList = self.Ck.copy()
         # for combo in freqList:
         #     for item in combo:
-                
         return
 
     def run(self):
