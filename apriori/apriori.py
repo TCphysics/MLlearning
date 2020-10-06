@@ -1,7 +1,13 @@
     
 class ApriopriCT(object):
+    '''
+    This python script finds the frequency list FL with maximum length and
+    then build rules based on each list in FL.
+    '''
+
 
     def __init__(self, dataList, itemList, minSupport=0.2, minConfidence=0.8):
+        
         '''
         param dataList: original dataList
         param minSupport: minimum Support
