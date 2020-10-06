@@ -21,7 +21,7 @@ class ApriopriCT(object):
         self.supportDictionary = dict()
         self.confidenceList = []
         self.C0 = self.C0 = [[i] for i in range(len(self.itemList))]
-        self.Ck = []
+        self.freqList = []
         self.prepareData()
 
     def prepareData(self):
@@ -94,11 +94,11 @@ class ApriopriCT(object):
             else:
                 C = Ck
             i+=1
-        self.Ck = C.copy()
+        self.freqList = C.copy()
         return
 
     def printFreqList(self):
-        for k in self.Ck:
+        for k in self.freqList:
             combo = [self.itemList[i] for i in k]
             print('Freq list:',combo,',freq:', round(self.supportDictionary[frozenset(k)],5))
         # for k in self.supportDictionary.keys():
@@ -143,8 +143,8 @@ class ApriopriCT(object):
             self.confidenceList.append( [tag, conf] )
 
     def buildRules(self):
-        # iterates over each combo in Ck.
-        freqList = self.Ck.copy()
+        # iterates over each combo in freqList.
+        freqList = self.freqList.copy()
         for combo in freqList:
             # print('combo:',combo)
             ruleList = self.findRule(combo)
