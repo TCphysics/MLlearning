@@ -1,18 +1,27 @@
     
-
 class ApriopriCT(object):
 
-    def __init__(self, dataList, itemList, minSupport=0.1, minConfidence=0.6):
+    def __init__(self, dataList, itemList, minSupport=0.2, minConfidence=0.8):
+        '''
+        param dataList: original dataList
+        param minSupport: minimum Support
+        param minConfidence: minimum Confidence
+        param itemList: list of all items
+        param processedData: processed Data with 1 and 0 in each raw representing
+                             if items are included.
+        param supportDictionary: Dictionary of support
+        param confidenceList: List of confidence
+        param Ck: optimal frequency list depending on minSupport
+        '''
         self.dataList = dataList
         self.minSupport = minSupport
         self.minConfidence = minConfidence
         self.itemList = itemList
         self.processedData = []
         self.supportDictionary = dict()
-        self.confidenceDictionary = dict()
+        self.confidenceList = []
         self.C0 = self.C0 = [[i] for i in range(len(self.itemList))]
         self.Ck = []
-        self.Rules = []
         self.prepareData()
 
     def prepareData(self):
@@ -91,25 +100,69 @@ class ApriopriCT(object):
     def printFreqList(self):
         for k in self.Ck:
             combo = [self.itemList[i] for i in k]
-            print('combo:',combo,',freq:', round(self.supportDictionary[frozenset(k)],5))
+            print('Freq list:',combo,',freq:', round(self.supportDictionary[frozenset(k)],5))
         # for k in self.supportDictionary.keys():
         #     combo = [self.itemList[i] for i in k]
         #     print('combo:',k,',freq:', round(self.supportDictionary[k],5))
         return
 
-    def calConfidence(self,set1,set2):
+    def calConfidence(self,l,freqCombo):
+        #calculate Conf of a sublist based on a combo
+        set1 = frozenset(freqCombo)
+        set2 = frozenset(freqCombo) - frozenset(l)
         ratio = self.supportDictionary[set1]/self.supportDictionary[set2]
         return ratio
 
+    def updateCr(self, Cr, freqCombo):
+        # drop items list if its conf is lower han minConfidence
+        c_update = []
+        for c in Cr:
+            if self.calConfidence(c, freqCombo) > self.minConfidence:
+                c_update.append(c)
+        return c_update
+
+    def findRule(self, freqCombo):
+        # build rule list for a combo
+        Cr = [[f]  for f in freqCombo]
+        i = 1
+        ruleList = []
+        while i < len(freqCombo):
+            updateCr = self.updateCr(Cr,freqCombo)
+            ruleList += updateCr
+            if len(updateCr) == 0:
+                break
+            Cr = self.create_Ck(updateCr,i)
+            i+=1
+        return ruleList
+
+    def addRuleToConfDict(self,ruleList, freqCombo):
+        # find rule and fulfill confidenceList for a freqCombo
+        for rule in ruleList:
+            conf = self.calConfidence(rule, freqCombo)
+            tag = [rule, list(frozenset(freqCombo)-frozenset(rule))]
+            self.confidenceList.append( [tag, conf] )
+
     def buildRules(self):
+        # iterates over each combo in Ck.
         freqList = self.Ck.copy()
-        # for combo in freqList:
-        #     for item in combo:
+        for combo in freqList:
+            # print('combo:',combo)
+            ruleList = self.findRule(combo)
+            self.addRuleToConfDict(ruleList, combo)
+            # print('ruleList:',ruleList)
         return
+
+    def printRules(self):
+        for k in self.confidenceList:
+            r1 = [self.itemList[i] for i in k[0][1]]
+            r2 = [self.itemList[i] for i in k[0][0]]
+            print('rule:',r1,' to ',r2 ,', conf=',round(k[1],4))
 
     def run(self):
         self.findFreqList()
         self.printFreqList()
+        self.buildRules()
+        self.printRules()
 
 
 if __name__ == '__main__':
